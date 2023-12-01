@@ -11,6 +11,8 @@
 <body>
 <article>
   <?= $post;?>
+    <a href="/"> ...go back</a>
+
 </article>
 </body>
 </html>

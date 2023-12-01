@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,19 +15,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('posts');
+    $doc = YamlFrontMatter:: parseFile(
+        resource_path('posts/first-post.html')
+    );
+//    return view('posts',[
+//        'posts' => Post::all()
+//        ]);
 });
 
 Route::get('post/{post}', function($slug){
-    $path = __DIR__ . "/../resources/posts/{$slug}.html";
+//    Find a post by its slug and pass it to a view called "post"
 
-    if (!file_exists($path)){
-        return redirect ("/");
-    }
-    $post = file_get_contents(($path));
 
-    return view('post', [
-        'post' => $post
+    return view ('post',[
+        'post' => Post::find($slug)
     ]);
+//
+//
+//
+//
 
 })->where('post', '[A-z_\-]+');
