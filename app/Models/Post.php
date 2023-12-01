@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class Post
 {
@@ -14,31 +15,49 @@ class Post
      * @param $date
      * @param $body
      */
-    public function __construct($title, $excerpt, $date, $body)
+    public function __construct($title, $excerpt, $date, $slug, $body)
     {
         $this->title = $title;
         $this->excerpt = $excerpt;
         $this->date = $date;
+        $this->slug = $slug;
         $this->body = $body;
     }
 
 
     public static function all()
     {
-        $files =  File::files(resource_path("/posts/"));
+        return cache()->rememberForever('posts.all', function (){
+            return collect(File::files(resource_path("posts")))
+                ->map(fn($file) => YamlFrontMatter::parseFile($file))
+                ->map(fn($doc) => new Post(
 
-        return array_map(fn($file) => $file->getContents(), $files);
+                    $doc->title,
+                    $doc->excerpt,
+                    $doc->date,
+                    $doc->slug,
+                    $doc->body()
+                ))
+                ->sortByDesc('date');
+        });
+
+
+
     }
     public static function find($slug)
     {
 
-        if (!file_exists( $path=resource_path("/posts/{$slug}.html"))){
+//        Find posts with a slug that matches the one was requested
+       return static::all()->firstwhere('slug', $slug);
+
+    }
+    public static function findOrFail($slug)
+    {
+        $post = static::find($slug);
+
+        if (! $post) {
             throw new ModelNotFoundException();
         }
-
-
-        return cache()->remember("post.{$slug}", now()->hour(2), fn() =>  file_get_contents($path));
-
-
+        return $post;
     }
 }
