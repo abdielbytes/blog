@@ -47,7 +47,7 @@ class Post
     public static function find($slug)
     {
 
-//        Find posts with a slug that matches the one was requested
+
        return static::all()->firstwhere('slug', $slug);
 
     }
