@@ -1,17 +1,17 @@
-body{
+body {
     background: white;
-    color: #0b2e13;
+    color: #222222;
     max-width: 600px;
     margin: auto;
     font-family: sans-serif;
 }
 
-p{
-    line-height: 1.7;
+p {
+    line-height: 1.6;
 }
 
-article{
+article + article {
     margin-top: 3rem;
-    padding: 3rem;
-    border-top: 1px solid #0b2e13 ;
+    padding-top: 3rem;
+    border-top: 1px solid #c5c5c5;
 }
