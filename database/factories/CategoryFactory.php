@@ -23,7 +23,9 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->word,
-            'slug' => $this->faker->unique()->slug
+            'slug' => $this->faker->unique()->slug,
+            'name' => $this->faker->unique()->word(),
+            'slug' => $this->faker->unique()->slug()
         ];
     }
 }
