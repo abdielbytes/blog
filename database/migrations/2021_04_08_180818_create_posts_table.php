@@ -11,6 +11,9 @@ class CreatePostsTable extends Migration
      *
      * @return void
      */
+
+// Add a status column to the posts table to allow for posts that are still in a "draft" state.
+// Only when this status is changed to "published" should they show up in the blog feed.
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
@@ -24,6 +27,7 @@ class CreatePostsTable extends Migration
             $table->text('body');
             $table->timestamps();
             $table->timestamp('published_at')->nullable();
+            $table->boolean('status')->default(true);
         });
     }
 

@@ -9,7 +9,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $with = ['category', 'author'];
+    protected $with = ['category', 'author', 'status'];
 
     public function scopeFilter($query, array $filters)
     {
@@ -33,6 +33,10 @@ class Post extends Model
         );
     }
 
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
     public function comments()
     {
         return $this->hasMany(Comment::class);
