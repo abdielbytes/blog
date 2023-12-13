@@ -7,14 +7,21 @@ use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
+
     public function index()
     {
+        $posts = Post::status(true)
+            ->latest()
+            ->filter(request(['search', 'category', 'author']))
+            ->paginate(18)
+            ->withQueryString();
+
         return view('posts.index', [
-            'posts' => Post::latest()->filter(
-                        request(['search', 'category', 'author', ])
-                    )->paginate(18)->withQueryString()
+            'posts' => $posts,
         ]);
     }
+
+
 
     public function show(Post $post)
     {

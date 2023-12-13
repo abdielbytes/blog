@@ -31,12 +31,23 @@ class Post extends Model
                 $query->where('username', $author)
             )
         );
+
     }
 
-    public function status()
+
+    public function scopeStatus($query, bool $filters)
     {
-        return $this->belongsTo(Status::class);
+        $allowedStatuses = [true, false];
+
+        $query->when($filters['status'] ?? false, function ($query, $status) use ($allowedStatuses) {
+            if (in_array($status, $allowedStatuses)) {
+                $query->where('status', $status);
+            }
+        });
+
+        return $query;
     }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
