@@ -10,7 +10,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::status(true)
+        $posts = Post::published(true)
             ->latest()
             ->filter(request(['search', 'category', 'author']))
             ->paginate(18)
