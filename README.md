@@ -1,4 +1,4 @@
-# Laravel Application
+# Laracast Blog
 
 ## Introduction
 
