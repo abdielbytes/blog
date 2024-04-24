@@ -21,11 +21,19 @@ class AdminPostController extends Controller
 
     public function store()
     {
-        Post::create(array_merge($this->validatePost(), [
-            'user_id' => request()->user()->id,
-            'thumbnail' => request()->file('thumbnail')->store('thumbnails'),
-            'published' => request()->input('status'),
-        ]));
+        $attributes = request()->validate([
+            'title' => 'required',
+            'thumbnail' => 'required|image',
+            'slug' => ['required', Rule::unique('posts', 'slug')],
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => ['required', Rule::exists('categories', 'id')]
+        ]);
+
+        $attributes['user_id'] = auth()->id();
+        $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
+
+        Post::create($attributes);
 
         return redirect('/');
     }
@@ -37,10 +45,16 @@ class AdminPostController extends Controller
 
     public function update(Post $post)
     {
-        $attributes = $this->validatePost($post);
+        $attributes = request()->validate([
+            'title' => 'required',
+            'thumbnail' => 'image',
+            'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post->id)],
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => ['required', Rule::exists('categories', 'id')]
+        ]);
 
-
-        if ($attributes['thumbnail'] ?? false) {
+        if (isset($attributes['thumbnail'])) {
             $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
         }
 

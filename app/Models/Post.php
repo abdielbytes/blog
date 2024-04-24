@@ -9,7 +9,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $with = ['category', 'author', 'published'];
+    protected $with = ['category', 'author'];
 
     public function scopeFilter($query, array $filters)
     {
@@ -31,22 +31,7 @@ class Post extends Model
                 $query->where('username', $author)
             )
         );
-
     }
-
-
-//    public function scopeStatus($query, bool $filters)
-//    {
-//        $allowedStatuses = [true, false];
-//
-//        $query->when($filters['status'] ?? false, function ($query, $status) use ($allowedStatuses) {
-//            if (in_array($status, $allowedStatuses)) {
-//                $query->where('status', $status);
-//            }
-//        });
-//
-//        return $query;
-//    }
 
     public function comments()
     {
@@ -61,10 +46,5 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function published()
-    {
-        // Define your relationship logic here
     }
 }
